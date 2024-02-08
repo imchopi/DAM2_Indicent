@@ -1,0 +1,78 @@
+package incident.Incident.adapter;
+
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import incident.Incident.domain.Incident;
+import incident.Incident.domain.User;
+import incident.Incident.service.UserService;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
+// Cambiar a plurar el user a users y todo a plurar por best practice
+@RestController
+@RequestMapping("/api")
+public class UserController {
+
+    private PasswordEncoder encoder;
+    private UserService service;
+
+    public UserController(UserService service, PasswordEncoder encoder) {
+        this.service = service;
+        this.encoder = encoder;
+    }
+
+    @GetMapping("/users")
+    public Iterable<User> getAllUser() {
+        // return userRepository.findAll();
+        return service.getAll();
+    }
+
+    @GetMapping("/users/{id}")
+    public Optional<User> getUserById(@PathVariable int id) {
+        return service.getById(id);
+    }
+
+    @PostMapping("/users")
+    public User createUser(@RequestBody User entity) {
+        User user;
+        String encodedPassword;
+
+        try {
+            encodedPassword = this.encoder.encode(entity.getPassword());
+            entity.setPassword(encodedPassword);
+            user = service.create(entity);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The email already exist");
+        }
+
+        return user;
+    }
+
+
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable int id) {
+        service.delete(id);
+    }
+
+    @PutMapping("/users/{id}")
+    public User updateUser(@PathVariable int id, @RequestBody User entity) {
+        try {
+            return service.update(id, entity);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+}

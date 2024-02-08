@@ -1,5 +1,68 @@
 package incident.Incident.service;
 
-public class UserServiceImplementation {
-    
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import incident.Incident.core.Exceptions.Users.UserAlreadyExistsException;
+import incident.Incident.domain.Incident;
+import incident.Incident.domain.User;
+import incident.Incident.domain.UserRepository;
+
+@Service
+public class UserServiceImplementation implements UserService {
+
+    private UserRepository repository;
+
+    public UserServiceImplementation(
+        UserRepository repository
+    ){
+        this.repository = repository;
+    }
+
+    @Override
+    public Iterable<User> getAll() {
+        return this.repository.findAll();
+    }
+
+    @Override
+    public Optional<User> getById(int id) {
+        return this.repository.findById(id);
+    }
+
+    @Override
+    public User create(@RequestBody User entity) {
+
+        if (repository.existsByEmail(entity.getEmail())) {
+            throw new UserAlreadyExistsException();
+        }
+
+        return repository.save(entity);
+
+    }
+
+    @Override
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public User update(int id, User entity) {
+        User user = repository.findById(id).orElseThrow();
+
+        user.setId(entity.getId());
+        user.setNickname(entity.getNickname());
+        user.setName(entity.getName());
+        user.setSurname1(entity.getSurname1());
+        user.setSurname2(entity.getSurname2());
+        user.setRol(entity.getRol());
+        user.setIncidents(entity.getIncidents());
+
+        return repository.save(user);
+    }
+
+
+
+
 }
