@@ -25,12 +25,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/api")
 public class UserController {
 
-    private PasswordEncoder encoder;
     private UserService service;
 
-    public UserController(UserService service, PasswordEncoder encoder) {
+    public UserController(UserService service) {
         this.service = service;
-        this.encoder = encoder;
     }
 
     @GetMapping("/users")
@@ -47,11 +45,9 @@ public class UserController {
     @PostMapping("/users")
     public User createUser(@RequestBody User entity) {
         User user;
-        String encodedPassword;
+
 
         try {
-            encodedPassword = this.encoder.encode(entity.getPassword());
-            entity.setPassword(encodedPassword);
             user = service.create(entity);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The email already exist");

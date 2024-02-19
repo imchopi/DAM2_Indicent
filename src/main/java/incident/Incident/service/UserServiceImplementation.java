@@ -2,6 +2,7 @@ package incident.Incident.service;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -13,11 +14,13 @@ import incident.Incident.domain.UserRepository;
 @Service
 public class UserServiceImplementation implements UserService {
 
+    private PasswordEncoder encoder;
     private UserRepository repository;
 
     public UserServiceImplementation(
-            UserRepository repository) {
+            UserRepository repository,PasswordEncoder encoder) {
         this.repository = repository;
+        this.encoder = encoder;
     }
 
     @Override
@@ -37,6 +40,8 @@ public class UserServiceImplementation implements UserService {
             throw new UserAlreadyExistsException();
         }
 
+        String encodedPassword = this.encoder.encode(entity.getPassword());
+        entity.setPassword(encodedPassword);
         return repository.save(entity);
 
     }
