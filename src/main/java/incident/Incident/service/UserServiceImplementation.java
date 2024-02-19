@@ -18,7 +18,7 @@ public class UserServiceImplementation implements UserService {
     private UserRepository repository;
 
     public UserServiceImplementation(
-            UserRepository repository,PasswordEncoder encoder) {
+            UserRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
         this.encoder = encoder;
     }
@@ -39,7 +39,6 @@ public class UserServiceImplementation implements UserService {
         if (repository.existsByEmail(entity.getEmail())) {
             throw new UserAlreadyExistsException();
         }
-
         String encodedPassword = this.encoder.encode(entity.getPassword());
         entity.setPassword(encodedPassword);
         return repository.save(entity);

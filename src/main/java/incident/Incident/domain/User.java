@@ -37,6 +37,10 @@ public class User {
         this.rol = rol;
     }
 
+    public User() {
+
+    }
+
     @OneToMany(targetEntity = Incident.class, mappedBy = "user")
     private List<Incident> incidents;
 

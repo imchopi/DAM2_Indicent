@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-// Cambiar a plurar el user a users y todo a plurar por best practice
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
+    public PasswordEncoder encoder;
     private UserService service;
 
     public UserController(UserService service) {
@@ -33,7 +33,6 @@ public class UserController {
 
     @GetMapping("/users")
     public Iterable<User> getAllUser() {
-        // return userRepository.findAll();
         return service.getAll();
     }
 
@@ -45,8 +44,6 @@ public class UserController {
     @PostMapping("/users")
     public User createUser(@RequestBody User entity) {
         User user;
-
-
         try {
             user = service.create(entity);
         } catch (Exception e) {
@@ -55,7 +52,6 @@ public class UserController {
 
         return user;
     }
-
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id) {
