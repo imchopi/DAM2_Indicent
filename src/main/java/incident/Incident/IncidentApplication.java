@@ -22,7 +22,7 @@ public class IncidentApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		User admin = new User("admin13", "admin13", "admin13", "admin13", "admin13@gmail.com", "Admin123", "ADMIN");
+		User admin = new User("admin131", "admin131", "admin131", "admin131", "admin131@gmail.com", "Admin123", "ADMIN");
 		try {
 			this.userSvc.create(admin);
 		} catch (Exception e) {
