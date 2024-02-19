@@ -2,21 +2,30 @@ package incident.Incident.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import incident.Incident.core.Exceptions.Incidents.IncidentAlreadyExistsException;
+import incident.Incident.core.Exceptions.Users.UserAlreadyExistsException;
+import incident.Incident.core.Exceptions.Users.UserDoesNotExistsException;
 import incident.Incident.domain.Incident;
 import incident.Incident.domain.IncidentRepository;
+import incident.Incident.domain.User;
+import incident.Incident.domain.UserIdDto;
+import incident.Incident.domain.UserRepository;
 
 @Service
 public class IncidentServiceImplementation implements IncidentService {
-    
-    private IncidentRepository repository;
+
+    private final IncidentRepository repository;
+    private final UserRepository userRepo;
 
     public IncidentServiceImplementation(
-        IncidentRepository repository
-    ){
+            IncidentRepository repository,
+            UserRepository userRepo) {
+        this.userRepo = userRepo;
         this.repository = repository;
     }
 
@@ -31,15 +40,20 @@ public class IncidentServiceImplementation implements IncidentService {
     }
 
     @Override
-    public Incident create(@RequestBody Incident entity) {
+    public Incident create(@RequestBody UserIdDto entity) throws UserDoesNotExistsException {
 
-        if (repository.existsById(entity.getId())) {
-            throw new IncidentAlreadyExistsException();
-        }
+        int userId = entity.getUser();
+        User user = this.userRepo.findById(userId).orElseThrow(() -> new UserDoesNotExistsException());
 
-        return repository.save(entity);
+        Incident incident = new Incident();
+
+        BeanUtils.copyProperties(entity, incident, "userId");
+        incident.setUser(user);
+
+        return repository.save(incident);
 
     }
+
 
     @Override
     public void delete(int id) {
@@ -47,16 +61,21 @@ public class IncidentServiceImplementation implements IncidentService {
     }
 
     @Override
-    public Incident update(int id, Incident entity) {
+    public Incident update(int id, UserIdDto entity) {
         Incident incident = repository.findById(id).orElseThrow();
 
-        incident.setId(entity.getId());
+        incident.setId(id);
         incident.setTitle(entity.getTitle());
         incident.setDescription(entity.getDescription());
-        incident.setUser(entity.getUser());
         incident.setStatus(entity.getStatus());
 
         return repository.save(incident);
     }
+
+    @Override
+    public boolean userExists(int id) {
+        return this.userRepo.existsById(id);
+    }
+
 
 }

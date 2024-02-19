@@ -67,9 +67,9 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable int id, @RequestBody User entity) {
+    public void updateUser(@PathVariable int id, @RequestBody User entity) {
         try {
-            return service.update(id, entity);
+            service.update(id, entity);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

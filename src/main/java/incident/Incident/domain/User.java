@@ -26,7 +26,7 @@ public class User {
     private String password;
     private String rol;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(targetEntity=Incident.class, mappedBy = "user")
     private List<Incident> incidents;
 
     public int getId() {
@@ -92,13 +92,4 @@ public class User {
     public void setRol(String rol) {
         this.rol = rol;
     }
-
-    public List<Incident> getIncidents() {
-        return incidents;
-    }
-
-    public void setIncidents(List<Incident> incidents) {
-        this.incidents = incidents;
-    }
-
 }

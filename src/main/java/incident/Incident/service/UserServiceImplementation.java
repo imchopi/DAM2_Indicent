@@ -16,8 +16,7 @@ public class UserServiceImplementation implements UserService {
     private UserRepository repository;
 
     public UserServiceImplementation(
-        UserRepository repository
-    ){
+            UserRepository repository) {
         this.repository = repository;
     }
 
@@ -48,7 +47,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User update(int id, User entity) {
+    public void update(int id, User entity) {
         User user = repository.findById(id).orElseThrow();
 
         user.setId(entity.getId());
@@ -57,12 +56,7 @@ public class UserServiceImplementation implements UserService {
         user.setSurname1(entity.getSurname1());
         user.setSurname2(entity.getSurname2());
         user.setRol(entity.getRol());
-        user.setIncidents(entity.getIncidents());
-
-        return repository.save(user);
+        repository.save(user);
     }
-
-
-
 
 }

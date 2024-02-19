@@ -9,12 +9,12 @@ public interface UserService {
     
     public Iterable<User> getAll();
 
-    public Optional<User> getById(int user);
+    public Optional<User> getById(int id);
 
     public User create(User entity);
 
     public void delete(int id);
     
-    public User update(int id, User entity);
+    public void update(int id, User entity);
 
 }
