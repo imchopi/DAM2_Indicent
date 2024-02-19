@@ -26,7 +26,18 @@ public class User {
     private String password;
     private String rol;
 
-    @OneToMany(targetEntity=Incident.class, mappedBy = "user")
+    public User(String nickname, String name, String surname1, String surname2, String email, String password,
+            String rol) {
+        this.nickname = nickname;
+        this.name = name;
+        this.surname1 = surname1;
+        this.surname2 = surname2;
+        this.email = email;
+        this.password = password;
+        this.rol = rol;
+    }
+
+    @OneToMany(targetEntity = Incident.class, mappedBy = "user")
     private List<Incident> incidents;
 
     public int getId() {
