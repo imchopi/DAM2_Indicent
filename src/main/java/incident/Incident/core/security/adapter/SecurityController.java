@@ -22,6 +22,7 @@ public class SecurityController {
         this.service = service;
         this.encoder = encoder;
     }
+    
     @PostMapping("/register")
     public User postMethodName(@RequestBody User entity) {
         String encodedPassword = this.encoder.encode(entity.getPassword());

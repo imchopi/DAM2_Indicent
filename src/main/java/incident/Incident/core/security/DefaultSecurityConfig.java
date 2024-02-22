@@ -28,10 +28,9 @@ public class DefaultSecurityConfig {
     public SecurityFilterChain routerFilter(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
                 (requests) -> requests
-                        .requestMatchers(HttpMethod.POST, "/register")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
+                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                        .requestMatchers("/csrf").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
