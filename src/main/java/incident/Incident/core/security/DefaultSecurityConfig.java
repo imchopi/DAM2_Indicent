@@ -30,6 +30,7 @@ public class DefaultSecurityConfig {
                 (requests) -> requests
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
                         .requestMatchers("/csrf").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/incidents").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
