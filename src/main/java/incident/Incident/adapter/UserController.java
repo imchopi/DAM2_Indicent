@@ -8,8 +8,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import incident.Incident.core.Exceptions.Users.UserDoesNotExistsException;
 import incident.Incident.domain.Incident;
 import incident.Incident.domain.User;
+import incident.Incident.domain.UserLogin;
 import incident.Incident.service.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +29,11 @@ public class UserController {
     public PasswordEncoder encoder;
     private UserService service;
 
-    public UserController(UserService service) {
+    public UserController(UserService service, PasswordEncoder encoder) {
+        this.encoder = encoder;
         this.service = service;
     }
+        
 
     @GetMapping("/users")
     public Iterable<User> getAllUser() {
@@ -51,6 +55,18 @@ public class UserController {
         }
 
         return user;
+    }
+
+    @PostMapping("/login")
+    public boolean login(@RequestBody UserLogin userLogin) {
+        User user = new User();
+        try {
+            user = service.getUserByEmail(userLogin.getEmail());
+            return encoder.matches(userLogin.getPassword(), user.getPassword());
+        } catch (UserDoesNotExistsException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @DeleteMapping("/users/{id}")

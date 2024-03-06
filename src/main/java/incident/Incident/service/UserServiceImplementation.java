@@ -1,5 +1,7 @@
 package incident.Incident.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import incident.Incident.core.Exceptions.Users.UserAlreadyExistsException;
+import incident.Incident.core.Exceptions.Users.UserDoesNotExistsException;
 import incident.Incident.domain.Incident;
 import incident.Incident.domain.User;
 import incident.Incident.domain.UserRepository;
@@ -43,6 +46,11 @@ public class UserServiceImplementation implements UserService {
         entity.setPassword(encodedPassword);
         return repository.save(entity);
 
+    }
+
+    @Override
+    public User getUserByEmail(String email) throws UserDoesNotExistsException {
+        return repository.findByEmail(email).orElseThrow(() -> new UserDoesNotExistsException());
     }
 
     @Override

@@ -21,7 +21,7 @@ public class User {
     private String surname2;
 
     @NonNull
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(unique = true)
     private String email;
     private String password;
     private String rol;
@@ -41,8 +41,8 @@ public class User {
 
     }
 
-    @OneToMany(targetEntity = Incident.class, mappedBy = "user")
-    private List<Incident> incidents;
+    /*@OneToMany(targetEntity = Incident.class, mappedBy = "user")
+    private List<Incident> incidents;*/
 
     public int getId() {
         return id;

@@ -14,6 +14,8 @@ public interface IncidentService {
 
     public Incident create(UserIdDto entity) throws UserDoesNotExistsException;
 
+    public Incident createIncident(Incident entity) throws UserDoesNotExistsException;
+
     public void delete(int id);
     
     public Incident update(int id, UserIdDto entity);

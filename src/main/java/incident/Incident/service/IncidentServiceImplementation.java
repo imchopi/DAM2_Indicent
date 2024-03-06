@@ -43,12 +43,11 @@ public class IncidentServiceImplementation implements IncidentService {
     public Incident create(@RequestBody UserIdDto entity) throws UserDoesNotExistsException {
 
         int userId = entity.getUser();
-        User user = this.userRepo.findById(userId).orElseThrow(() -> new UserDoesNotExistsException());
 
         Incident incident = new Incident();
 
         BeanUtils.copyProperties(entity, incident, "userId");
-        incident.setUser(user);
+        incident.setUser(userId);
 
         return repository.save(incident);
 
@@ -75,6 +74,18 @@ public class IncidentServiceImplementation implements IncidentService {
     @Override
     public boolean userExists(int id) {
         return this.userRepo.existsById(id);
+    }
+
+    @Override
+    public Incident createIncident(Incident entity) throws UserDoesNotExistsException {
+        int userId = entity.getUser();
+
+        Incident incident = new Incident();
+
+        BeanUtils.copyProperties(entity, incident, "userId");
+        incident.setUser(userId);
+
+        return repository.save(incident);
     }
 
 

@@ -22,7 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         incident.Incident.domain.User user = this.repository.findByEmail(username)
         .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        UserDetails userDetails = User.builder().username(user.getEmail()).password(user.getPassword()).roles("ADMIN").build();
+        UserDetails userDetails = User.withUsername(user.getEmail()).password(user.getPassword()).roles("ADMIN").build();
+        /*UserDetails userDetails = User.builder().username(user.getEmail()).password(user.getPassword()).roles("ADMIN").build();*/
 
         return userDetails;
 

@@ -48,7 +48,14 @@ public class IncidentController {
 
     @GetMapping("/incidents")
     public Iterable<Incident> getAllIncident() {
-        return incidentSvc.getAll();
+        Iterable<Incident> incidents = incidentSvc.getAll();
+        
+        for (Incident incident : incidents) {
+            System.out.println("ID: " + incident.getId());
+            System.out.println("Descripción: " + incident.getDescription());
+        }
+        
+        return incidents;
     }
 
     @GetMapping("/incidents/{id}")
@@ -57,7 +64,8 @@ public class IncidentController {
     }
 
     @PostMapping(path = "/incidents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UserIdDto createIncident(@RequestPart("incident") UserIdDto incident, @RequestParam("file") MultipartFile file) throws UserDoesNotExistsException {
+    public UserIdDto createIncident(@RequestPart("incident") UserIdDto incident,
+            @RequestParam("file") MultipartFile file) throws UserDoesNotExistsException {
         try (InputStream imageIS = file.getInputStream()) {
             byte[] imageB = imageIS.readAllBytes();
             String contentType = file.getContentType();
@@ -68,6 +76,17 @@ public class IncidentController {
             e.printStackTrace();
         }
         return incident;
+    }
+
+    @PostMapping(path = "/incident")
+    public Incident createIncident(@RequestBody Incident incident) throws UserDoesNotExistsException {
+        Incident newIncident = null;
+        try {
+            newIncident = incidentSvc.createIncident(incident);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Incident failed");
+        }
+        return newIncident;
     }
 
     @DeleteMapping("/incidents/{id}")

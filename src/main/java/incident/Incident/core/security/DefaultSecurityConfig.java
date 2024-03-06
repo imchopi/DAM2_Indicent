@@ -2,6 +2,7 @@ package incident.Incident.core.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,12 +22,14 @@ public class DefaultSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/csrf", "/register").permitAll()
-                                .requestMatchers("/api/incidents").permitAll()
-                                .anyRequest().authenticated()
-                )
+        http.csrf(csrf -> csrf.disable());
+        http.authorizeHttpRequests(
+                (requests) -> requests
+                        .requestMatchers("/api/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                        .requestMatchers("/csrf").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/incidents").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

@@ -18,18 +18,17 @@ public class Incident {
     private int id;
     private String title;
     private String description;
-
+    @Column(nullable = true)
     private String status;
-    @ManyToOne
-    @JoinColumn(name = "user", nullable = false)
-    private User user;
+    @Column(name = "user", nullable = false)
+    private int user;
     @Lob
-    @Column(columnDefinition = "LONGBLOB")
+    @Column(columnDefinition = "LONGBLOB", nullable = true)
     private byte[] file;
+    @Column(nullable = true)
     String fileType;
 
-    public Incident(int id, String title, String description, String status, User user, byte[] file, String fileType) {
-        this.id = id;
+    public Incident(String title, String description, String status, int user, byte[] file, String fileType) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -72,11 +71,11 @@ public class Incident {
         this.status = status;
     }
 
-    public User getUser() {
+    public int getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(int user) {
         this.user = user;
     }
 
